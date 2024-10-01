@@ -23,7 +23,7 @@ jobs:
       - name: Connect to VPN
         run: |
           echo "${{ secrets.OPEN_VPN_CONFIG }}" > config.ovpn
-          sudo openvpn --config config.ovpn
+          sudo openvpn --config config.ovpn &
           sleep 10
       - name: SSH deploy
         uses: appleboy/ssh-action@master
