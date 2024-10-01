@@ -25,25 +25,39 @@ jobs:
           echo "${{ secrets.OPEN_VPN_CONFIG }}" > config.ovpn
           sudo openvpn --config config.ovpn
           sleep 10
-      - name: SSH deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PEM_KEY }}
-          port: 22
-          script: |
-            echo $PATH
-            echo $SHELL
-            echo `pwd`
-            echo $USER
-            echo $HOME
-            echo `which java` || true
-            echo `java --version` || true
-            echo `java -version` || true
-            echo `jenv --version` || true
-            echo `mvn --version` || true
-            echo `node -v` || true
+          echo "${{ secrets.SSH_PEM_KEY }}" > ssh.pem
+          chmod 400 ssh.pem
+          ssh -i ssh.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}
+          echo $PATH
+          echo $SHELL
+          echo `pwd`
+          echo $USER
+          echo $HOME
+          echo `which java` || true
+          echo `java --version` || true
+          echo `java -version` || true
+          echo `jenv --version` || true
+          echo `mvn --version` || true
+          echo `node -v` || true
+      # - name: SSH deploy
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USERNAME }}
+      #     key: ${{ secrets.SSH_PEM_KEY }}
+      #     port: 22
+      #     script: |
+      #       echo $PATH
+      #       echo $SHELL
+      #       echo `pwd`
+      #       echo $USER
+      #       echo $HOME
+      #       echo `which java` || true
+      #       echo `java --version` || true
+      #       echo `java -version` || true
+      #       echo `jenv --version` || true
+      #       echo `mvn --version` || true
+      #       echo `node -v` || true
           
       # - name: Install dependencies
       #   run: |
